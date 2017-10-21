@@ -75,9 +75,6 @@ namespace MapInitializer {
 			new TargetTile(MapInitializer.COLORS.CLYDE.normalize(), entities.clyde as GhostEntity).setParent(map);
 		}
 
-		// TODO: Initialize GL resources
-
-		map.reset();
 		return map;
 	}
 

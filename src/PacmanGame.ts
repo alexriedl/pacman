@@ -1,31 +1,24 @@
 import { Direction } from './Utils';
 import { Map, MapInitializer } from './Map';
 
-import { Game, Register } from 'sengine';
+import { Game } from 'sengine';
 
 const MILLISECONDS_PER_FRAME = (1 / 60) * 1000;
 
 export default class PacmanGame extends Game {
 	protected scene: Map;
+	protected frameTime: number = 0;
 
 	protected left: boolean;
 	protected right: boolean;
 	protected up: boolean;
 	protected down: boolean;
 
-	protected frameTime: number;
-
-	public constructor(canvasId: string) {
-		const map = MapInitializer.createMap(MapInitializer.MapType.ORIGINAL);
-		super(canvasId, map.pixelDimensions);
-		this.setScene(map);
-
-		this.frameTime = 0;
-	}
-
 	protected initialize(gl: WebGLRenderingContext): void {
-		Register.initializeGLItems(gl);
-		this.scene.reset();
+		const map = MapInitializer.createMap(MapInitializer.MapType.ORIGINAL);
+		super.initialize(gl);
+		map.reset();
+		this.setScene(map, map.pixelDimensions);
 	}
 
 	public onkeydown(event: KeyboardEvent): boolean {
