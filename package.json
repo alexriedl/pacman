@@ -1,0 +1,27 @@
+{
+  "name": "pacman",
+  "version": "1.0.0",
+  "description": "This is a remake of the original pacman game",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexriedl/drone-up"
+  },
+  "scripts": {},
+  "devDependencies": {},
+  "dependencies": {
+    "@types/webgl-ext": "0.0.29",
+    "babel-core": "6.26.0",
+    "babel-loader": "7.1.2",
+    "babel-plugin-transform-class-properties": "6.24.1",
+    "babel-plugin-transform-object-rest-spread": "6.26.0",
+    "babel-plugin-transform-runtime": "6.23.0",
+    "sengine": "git://github.com/alexriedl/sengine.git",
+    "ts-loader": "2.3.7",
+    "tslint": "5.7.0",
+    "typescript": "2.5.3",
+    "webpack": "3.6.0"
+  }
+}
