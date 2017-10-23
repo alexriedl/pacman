@@ -33,21 +33,19 @@
     },
     {
       "taskName": "npm install server",
-      "command": "npm",
-      "args": [ "install" ],
+      "command": "npm install",
       "options": { "cwd": "${workspaceRoot}/server" },
       "problemMatcher": [],
-      "type": "shell",
-      "group": "build"
+      "group": "build",
+      "type": "shell"
     },
     {
       "taskName": "npm install game",
-      "command": "npm",
-      "args": [ "install" ],
+      "command": "npm install",
       "options": { "cwd": "${workspaceRoot}/game" },
       "problemMatcher": [],
-      "type": "shell",
-      "group": "build"
+      "group": "build",
+      "type": "shell"
     }
   ]
 }

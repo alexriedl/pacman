@@ -19,7 +19,7 @@ module.exports = {
 	},
 	resolve: {
 		extensions: ['.js', '.ts'],
-		modules: [ 'node_modules' ]
+		modules: ['node_modules']
 	},
 	output: {
 		path: path.join(__dirname, bundleOutputDir),
