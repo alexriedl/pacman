@@ -1,0 +1,20 @@
+{
+  "name": "pacman-server",
+  "version": "1.0.0",
+  "description": "This is a remake of the original pacman game",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexriedl/drone-up"
+  },
+  "scripts": {},
+  "devDependencies": {},
+  "dependencies": {
+    "@types/node": "^8.0.46",
+    "express": "^4.16.2",
+    "tslint": "5.7.0",
+    "typescript": "2.5.3"
+  }
+}

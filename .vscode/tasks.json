@@ -1,0 +1,53 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "taskName": "build all",
+      "dependsOn": [ "build server", "build game" ],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
+      "taskName": "npm install",
+      "dependsOn": [ "npm install server", "npm install game" ],
+      "problemMatcher": []
+    },
+    {
+      "taskName": "build server",
+      "command": "tsc",
+      "options": { "cwd": "${workspaceRoot}/server" },
+      "problemMatcher": [ "$tsc" ],
+      "type": "shell",
+      "group": "build"
+    },
+    {
+      "taskName": "build game",
+      "command": "webpack",
+      "options": { "cwd": "${workspaceRoot}/game" },
+      "problemMatcher": [ "$tsc" ],
+      "type": "shell",
+      "group": "build"
+    },
+    {
+      "taskName": "npm install server",
+      "command": "npm",
+      "args": [ "install" ],
+      "options": { "cwd": "${workspaceRoot}/server" },
+      "problemMatcher": [],
+      "type": "shell",
+      "group": "build"
+    },
+    {
+      "taskName": "npm install game",
+      "command": "npm",
+      "args": [ "install" ],
+      "options": { "cwd": "${workspaceRoot}/game" },
+      "problemMatcher": [],
+      "type": "shell",
+      "group": "build"
+    }
+  ]
+}

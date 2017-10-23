@@ -6,11 +6,9 @@
     "noUnusedLocals": true,
     "skipDefaultLibCheck": true,
     "allowJs": true,
-    "outDir": "tsout",
-    "baseUrl": "./scripts"
+    "outDir": "tsout"
   },
   "exclude": [
-      "bin",
       "node_modules"
   ]
 }

@@ -2,7 +2,7 @@ var isDevBuild = process.argv.indexOf('--env.prod') < 0;
 var path = require('path');
 var webpack = require('webpack');
 
-var bundleOutputDir = './wwwroot/dist';
+var bundleOutputDir = '../wwwroot/game';
 
 var babelSettings = {
 	plugins: [
@@ -15,7 +15,7 @@ var babelSettings = {
 module.exports = {
 	devtool: isDevBuild ? 'source-map' : null,
 	entry: {
-		'pacman': './src/main.ts',
+		'pacman': './main.ts'
 	},
 	resolve: {
 		extensions: ['.js', '.ts'],
