@@ -1,4 +1,4 @@
-import { SpriteMap } from 'sengine';
+import { SpriteMap } from 'sengine/Model';
 
 export default abstract class PacMap extends SpriteMap {
 	private currentFrames: number[];

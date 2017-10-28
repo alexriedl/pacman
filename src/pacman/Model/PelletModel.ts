@@ -1,6 +1,5 @@
-import { MapTile } from '../Map';
-
-import { DynamicBuffer, SimpleRectangle, vec2, Color } from 'sengine';
+import { MapTile } from 'pacman/Map';
+import { Color, DynamicBuffer, SimpleRectangle, vec2 } from 'sengine';
 
 export default class PelletModel extends SimpleRectangle {
 	protected buffer: DynamicBuffer;

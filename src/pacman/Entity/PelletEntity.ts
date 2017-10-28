@@ -1,6 +1,5 @@
-import { PelletModel } from '../Model';
-
-import { Entity, Color, vec2 } from 'sengine';
+import { PelletModel } from 'pacman/Model';
+import { Color, Entity, vec2 } from 'sengine';
 
 export default class EnergizerEntity extends Entity {
 	private flip;

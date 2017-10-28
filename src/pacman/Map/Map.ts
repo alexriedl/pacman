@@ -1,8 +1,7 @@
-import { Entity, SimpleTextureRectangle, Color, vec2 } from 'sengine';
-
-import { Direction } from '../Utils';
-import { PacEntity, GhostEntity, Pacman, PelletEntity } from '../Entity';
 import MapTile from './MapTile';
+import { GhostEntity, PacEntity, Pacman, PelletEntity } from 'pacman/Entity';
+import { Direction } from 'pacman/Utils';
+import { Color, Entity, SimpleTextureRectangle, vec2 } from 'sengine';
 
 interface IGhostModeInfo {
 	currentGhostMode: GhostEntity.GhostMode;

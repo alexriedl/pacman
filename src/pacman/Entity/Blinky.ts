@@ -1,14 +1,14 @@
-import { GhostModel } from '../Model';
 import GhostEntity from './GhostEntity';
 import PacEntity from './PacEntity';
-
-import { vec2 } from 'sengine';
+import 'pacman/images/blinky.png';
+import { GhostModel } from 'pacman/Model';
+import { vec2 } from 'sengine/Math';
 
 export default class Blinky extends GhostEntity {
 	protected model: GhostModel;
 
 	public constructor(pacman: PacEntity) {
-		super(new GhostModel('Images/blinky.png'), pacman);
+		super(new GhostModel('images/blinky.png'), pacman);
 	}
 
 	public getTargetTile(): vec2 {

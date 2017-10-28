@@ -1,8 +1,7 @@
-import { Direction } from '../Utils';
-import { PacmanModel, DeadModel } from '../Model';
 import PacEntity from './PacEntity';
-
-import { vec2 } from 'sengine';
+import { DeadModel, PacmanModel } from 'pacman/Model';
+import { Direction } from 'pacman/Utils';
+import { vec2 } from 'sengine/Math';
 
 export default class Pacman extends PacEntity {
 	protected deadTicks: number;

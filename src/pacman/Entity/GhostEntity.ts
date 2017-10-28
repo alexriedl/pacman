@@ -1,9 +1,8 @@
-import { Direction } from '../Utils';
-import { MapTile } from '../Map';
-import { PacMap } from '../Model';
 import PacEntity from './PacEntity';
-
-import { vec2, vec3, mat4 } from 'sengine';
+import { MapTile } from 'pacman/Map';
+import { PacMap } from 'pacman/Model';
+import { Direction } from 'pacman/Utils';
+import { mat4, vec2, vec3 } from 'sengine/Math';
 
 interface IPenState {
 	entering: boolean;

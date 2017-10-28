@@ -1,10 +1,9 @@
-import { Color, vec2 } from 'sengine';
-
-import { PacEntity, Pacman, GhostEntity, Blinky, Pinky, Inky, Clyde, TargetTile } from '../Entity';
-import { Direction } from '../Utils';
+import Map from './Map';
 import MapTile from './MapTile';
 import OriginalMap from './OriginalMap';
-import Map from './Map';
+import { Blinky, Clyde, GhostEntity, Inky, PacEntity, Pacman, Pinky, TargetTile } from 'pacman/Entity';
+import { Direction } from 'pacman/Utils';
+import { Color, vec2 } from 'sengine';
 
 // TODO: Move these
 export interface IStringMap<T> { [key: string]: T; }
@@ -51,14 +50,14 @@ namespace MapInitializer {
 		ORIGINAL = 'ORIGINAL',
 	}
 
-	export function createMap(mapType: MapType): Map {
+	export function createMap(gl: WebGLRenderingContext, mapType: MapType): Map {
 		entities.pacman = entities.pacman || new Pacman();
 		entities.blinky = entities.blinky || new Blinky(entities.pacman);
 		entities.pinky = entities.pinky || new Pinky(entities.pacman);
 		entities.inky = entities.inky || new Inky(entities.pacman, entities.blinky);
 		entities.clyde = entities.clyde || new Clyde(entities.pacman);
 
-		const info = getMapInfo(mapType);
+		const info = getMapInfo(gl, mapType);
 
 		const map = new Map(info.mapTexture, info.basicMapTiles, info.tileDimensions);
 		map.initializePellets(info.pellets, info.energizers, COLORS.PELLET.normalize());
@@ -78,12 +77,12 @@ namespace MapInitializer {
 		return map;
 	}
 
-	function getMapInfo(mapType: MapType): IMapInfo {
+	function getMapInfo(gl: WebGLRenderingContext, mapType: MapType): IMapInfo {
 		if (mapInfos[mapType]) return mapInfos[mapType];
 		const tiles = getMapTiles(mapType);
 		const dimensions = new vec2(tiles[0].length, tiles.length);
 
-		const info = buildMapInfo(tiles, dimensions);
+		const info = buildMapInfo(gl, tiles, dimensions);
 
 		mapInfos[mapType] = info;
 		return info;
@@ -97,7 +96,7 @@ namespace MapInitializer {
 		return null;
 	}
 
-	function buildMapInfo(tiles: MapTile[][], tileDimensions: vec2): IMapInfo {
+	function buildMapInfo(gl: WebGLRenderingContext, tiles: MapTile[][], tileDimensions: vec2): IMapInfo {
 		const scatterTargets: IEntities<vec2> = {};
 		const startingTiles: IEntities<vec2> = {};
 		const basicMapTiles = [];
@@ -131,7 +130,7 @@ namespace MapInitializer {
 		return {
 			tileDimensions,
 			basicMapTiles,
-			mapTexture: buildMapTexture(tiles, tileDimensions),
+			mapTexture: buildMapTexture(gl, tiles, tileDimensions),
 			pellets,
 			energizers,
 			startingTiles,
@@ -139,7 +138,7 @@ namespace MapInitializer {
 		};
 	}
 
-	function buildMapTexture(tiles: MapTile[][], tileDimensions: vec2): WebGLTexture {
+	function buildMapTexture(gl: WebGLRenderingContext, tiles: MapTile[][], tileDimensions: vec2): WebGLTexture {
 		const textureData = [];
 		for (let tileY = 0; tileY < tileDimensions.y; tileY++) {
 			const tileRow = tiles[tileY];
@@ -158,7 +157,7 @@ namespace MapInitializer {
 			}
 		}
 		const data = new Uint8Array(textureData);
-		const texture = WebGLHelpers.createTexture(null, data, tileDimensions);
+		const texture = WebGLHelpers.createTexture(gl, data, tileDimensions);
 		return texture;
 	}
 }

@@ -1,12 +1,12 @@
-import { GhostModel } from '../Model';
 import GhostEntity from './GhostEntity';
 import PacEntity from './PacEntity';
-
-import { vec2 } from 'sengine';
+import 'pacman/images/clyde.png';
+import { GhostModel } from 'pacman/Model';
+import { vec2 } from 'sengine/Math';
 
 export default class Clyde extends GhostEntity {
 	public constructor(pacman: PacEntity) {
-		super(new GhostModel('Images/clyde.png'), pacman);
+		super(new GhostModel('images/clyde.png'), pacman);
 	}
 
 	public getTargetTile(): vec2 {

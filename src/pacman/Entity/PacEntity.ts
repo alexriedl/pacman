@@ -1,8 +1,8 @@
-import { Direction } from '../Utils';
-import { Map, MapTile } from '../Map';
-import { PacMap } from '../Model';
-
-import { Entity, vec2, vec3 } from 'sengine';
+import { Map, MapTile } from 'pacman/Map';
+import { PacMap } from 'pacman/Model';
+import { Direction } from 'pacman/Utils';
+import { Entity } from 'sengine/Entity';
+import { vec2, vec3 } from 'sengine/Math';
 
 export default abstract class PacEntity extends Entity {
 	protected model: PacMap;

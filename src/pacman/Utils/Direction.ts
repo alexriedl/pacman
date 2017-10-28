@@ -1,4 +1,4 @@
-import { vec2 } from 'sengine';
+import { vec2 } from 'sengine/Math';
 
 export enum Direction { RIGHT = 'RIGHT', LEFT = 'LEFT', UP = 'UP', DOWN = 'DOWN' }
 

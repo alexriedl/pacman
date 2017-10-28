@@ -1,15 +1,15 @@
-import { Direction } from '../Utils';
-import { GhostModel } from '../Model';
 import GhostEntity from './GhostEntity';
 import PacEntity from './PacEntity';
-
-import { vec2 } from 'sengine';
+import 'pacman/images/inky.png';
+import { GhostModel } from 'pacman/Model';
+import { Direction } from 'pacman/Utils';
+import { vec2 } from 'sengine/Math';
 
 export default class Inky extends GhostEntity {
 	private blinky: PacEntity;
 
 	public constructor(pacman: PacEntity, blinky: PacEntity) {
-		super(new GhostModel('Images/inky.png'), pacman);
+		super(new GhostModel('images/inky.png'), pacman);
 		this.blinky = blinky;
 	}
 
