@@ -45,7 +45,8 @@ module.exports = [{
 	resolve: {
 		extensions: ['.js', '.ts'],
 		alias: {
-			sengine: path.resolve(__dirname, 'src/sengine/src')
+			sengine: path.resolve(__dirname, 'src/sengine/src'),
+			pacman: path.resolve(__dirname, 'src/pacman')
 		}
 	},
 	output: {
