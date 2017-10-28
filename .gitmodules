@@ -1,0 +1,3 @@
+[submodule "src/sengine"]
+	path = src/sengine
+	url = git@github.com:alexriedl/sengine.git
