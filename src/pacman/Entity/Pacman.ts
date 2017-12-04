@@ -13,13 +13,15 @@ export default class Pacman extends PacEntity {
 	private deadAnimationFinished: () => void;
 
 	public constructor() {
+		super();
+
 		const mainModel = new PacmanModel();
 		const deadModel = new DeadModel();
 
-		super(mainModel);
-
 		this.mainModel = mainModel;
 		this.deadModel = deadModel;
+
+		this.setShader(this.mainModel);
 	}
 
 	public get isAlive(): boolean { return this.alive; }
@@ -29,18 +31,18 @@ export default class Pacman extends PacEntity {
 
 		this.deadTicks = 0;
 		this.alive = true;
-		this.model = this.mainModel;
-		this.model.reset();
+		this.shader = this.mainModel;
+		this.shader.reset();
 	}
 
 	protected onPixelChange(oldPixelPos: vec2): void {
 		switch (this.facing) {
-			case Direction.LEFT: this.model.goLeft(); break;
-			case Direction.RIGHT: this.model.goRight(); break;
-			case Direction.UP: this.model.goUp(); break;
-			case Direction.DOWN: this.model.goDown(); break;
+			case Direction.LEFT: this.shader.goLeft(); break;
+			case Direction.RIGHT: this.shader.goRight(); break;
+			case Direction.UP: this.shader.goUp(); break;
+			case Direction.DOWN: this.shader.goDown(); break;
 		}
-		this.model.nextFrame();
+		this.shader.nextFrame();
 	}
 
 	protected onTileChange(oldPixelPos: vec2): void {
@@ -61,16 +63,16 @@ export default class Pacman extends PacEntity {
 		}
 		else {
 			this.deadTicks = 3;
-			if (this.model) this.model.nextFrame(this.deadAnimationFinished);
+			if (this.shader) this.shader.nextFrame(this.deadAnimationFinished);
 		}
 	}
 
 	public kill(animationFinished: () => void): void {
 		this.alive = false;
-		this.model = this.deadModel;
+		this.shader = this.deadModel;
 		this.deadTicks = 3;
 		this.deadAnimationFinished = () => {
-			this.model = undefined;
+			this.shader = undefined;
 			animationFinished();
 		};
 	}

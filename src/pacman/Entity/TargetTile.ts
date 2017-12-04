@@ -1,6 +1,6 @@
 import { GhostEntity } from 'pacman/Entity';
 import { MapTile } from 'pacman/Map';
-import { Color, Entity, SimpleRectangle, vec2, vec3 } from 'sengine';
+import { Color, Entity, vec2, vec3, Shader, Buffer } from 'sengine';
 
 export default class TargetTile extends Entity {
 	private ghost: GhostEntity;
@@ -8,11 +8,18 @@ export default class TargetTile extends Entity {
 	public pixelPosition: vec2;
 
 	public constructor(color: Color, ghost: GhostEntity) {
+		super();
+
 		const size = MapTile.PIXELS_PER_TILE;
-		super(new SimpleRectangle(color), new vec3(), new vec3(size, size, 1));
-		this.ghost = ghost;
-		this.pixelPosition = new vec2(MapTile.PIXELS_PER_TILE / 2, MapTile.PIXELS_PER_TILE / 2);
+		const halfTile = MapTile.PIXELS_PER_TILE / 2;
+
+		const buffer = Buffer.createSquare(size);
+		const shader = new Shader.SimplerShader(buffer, color);
+		this.setShader(shader);
+
+		this.pixelPosition = new vec2(halfTile, halfTile);
 		this.tilePosition = new vec2(-1, -1);
+		this.ghost = ghost;
 	}
 
 	public get position(): vec3 {
@@ -20,8 +27,8 @@ export default class TargetTile extends Entity {
 	}
 	public set position(value: vec3) { return; }
 
-	public update(deltaTime: number): boolean {
+	public update(deltaTime: number): this {
 		this.tilePosition = this.ghost.getTargetTile();
-		return true;
+		return super.update(deltaTime);
 	}
 }

@@ -16,7 +16,7 @@ export default class EnergizerEntity extends Entity {
 		this.reset();
 	}
 
-	public update(deltaTime: number): boolean {
+	public update(deltaTime: number): this {
 		if (!this.flicker) return;
 
 		this.flip -= deltaTime;

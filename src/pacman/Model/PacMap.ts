@@ -1,21 +1,27 @@
-import { SpriteMap } from 'sengine/Model';
+import { Buffer, Shader, vec2 } from 'sengine';
 
-export default abstract class PacMap extends SpriteMap {
+export default abstract class SpriteMap extends Shader.TextureShader {
 	private currentFrames: number[];
 	private currentFrame: number;
 
-	protected abstract readonly spriteCount: number;
-	protected abstract readonly source: string;
 	protected abstract readonly left: number[];
 	protected abstract readonly right: number[];
 	protected abstract readonly up: number[];
 	protected abstract readonly down: number[];
-	protected readonly textureWidth: number = 16 * 3;
-	protected readonly textureHeight: number = 16 * 3;
 
-	public constructor() {
-		super();
-		this.reset();
+	public constructor(source: string) {
+		super(undefined, undefined, source);
+		this
+			.setUVBuffer(this.getUVBuffer())
+			.setVertBuffer(this.getVertexBuffer());
+	}
+
+	protected getVertexBuffer(): Buffer {
+		return Buffer.createSquare(1);
+	}
+
+	protected getUVBuffer(): Buffer {
+		return Buffer.createGridUV(new vec2(16, 16), new vec2(16 * 3, 16 * 3), 9);
 	}
 
 	public goLeft(): void { this.currentFrames = this.left; }
@@ -24,21 +30,11 @@ export default abstract class PacMap extends SpriteMap {
 	public goDown(): void { this.currentFrames = this.down; }
 
 	public nextFrame(onLoop?: () => void): void {
+		if (!this.metadata.program) return;
 		if (!this.currentFrames || this.currentFrames.length <= 0) return;
 		this.currentFrame = (this.currentFrame + 1) % this.currentFrames.length;
-		this.setFrame(this.currentFrames[this.currentFrame]);
+		this.uvBuffer.options.bufferUsages[0].offset = this.currentFrames[this.currentFrame] * 8 * 4;
 		if (this.currentFrame === 0 && onLoop) onLoop();
-	}
-
-	protected getMapInfo(): SpriteMap.IMapInfo {
-		return {
-			textureWidth: this.textureWidth,
-			textureHeight: this.textureHeight,
-			spritWidth: 16,
-			spritHeight: 16,
-			totalSprites: this.spriteCount,
-			source: this.source,
-		};
 	}
 
 	public reset(): void {

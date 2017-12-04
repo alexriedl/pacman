@@ -5,7 +5,7 @@ import { Game } from 'sengine/Game';
 const MILLISECONDS_PER_FRAME = (1 / 60) * 1000;
 
 export default class PacmanGame extends Game {
-	protected scene: Map;
+	public scene: Map;
 	protected frameTime: number = 0;
 
 	protected left: boolean;
@@ -13,11 +13,11 @@ export default class PacmanGame extends Game {
 	protected up: boolean;
 	protected down: boolean;
 
-	protected initialize(gl: WebGLRenderingContext): void {
-		const map = MapInitializer.createMap(gl, MapInitializer.MapType.ORIGINAL);
-		super.initialize(gl);
+	public constructor(glContext: WebGLRenderingContext | string) {
+		super(glContext);
+		const map = MapInitializer.createMap(MapInitializer.MapType.ORIGINAL);
 		map.reset();
-		this.setScene(map, map.pixelDimensions);
+		this.setScene(map);
 	}
 
 	public onkeydown(event: KeyboardEvent): boolean {

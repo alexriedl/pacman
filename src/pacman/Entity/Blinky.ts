@@ -5,7 +5,7 @@ import { GhostModel } from 'pacman/Model';
 import { vec2 } from 'sengine/Math';
 
 export default class Blinky extends GhostEntity {
-	protected model: GhostModel;
+	protected shader: GhostModel;
 
 	public constructor(pacman: PacEntity) {
 		super(new GhostModel('images/blinky.png'), pacman);

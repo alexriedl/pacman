@@ -1,7 +1,7 @@
 import MapTile from './MapTile';
 import { GhostEntity, PacEntity, Pacman, PelletEntity } from 'pacman/Entity';
 import { Direction } from 'pacman/Utils';
-import { Color, Entity, SimpleTextureRectangle, vec2 } from 'sengine';
+import { Camera2D, Buffer, Color, Scene, Shader, Texture, vec2, Entity } from 'sengine';
 
 interface IGhostModeInfo {
 	currentGhostMode: GhostEntity.GhostMode;
@@ -13,7 +13,7 @@ interface IPlayerDeadState {
 	deadPauseTimer: number;
 }
 
-export default class Map extends Entity {
+export default class Map extends Scene {
 	public readonly pixelDimensions: vec2;
 	public readonly tileDimensions: vec2;
 	public readonly mapInfo: MapTile.BasicMapTile[][];
@@ -28,12 +28,19 @@ export default class Map extends Entity {
 
 	private introTime: number;
 
-	public constructor(mapTexture: WebGLTexture, mapInfo: MapTile.BasicMapTile[][], tileDimensions: vec2) {
+	public constructor(mapTexture: Texture, mapInfo: MapTile.BasicMapTile[][], tileDimensions: vec2) {
 		const pixelDimensions = tileDimensions.scale(MapTile.PIXELS_PER_TILE);
-		super(
-			new SimpleTextureRectangle(mapTexture),
-			pixelDimensions.scale(0.5).toVec3(),
-			pixelDimensions.toVec3(1));
+		const camera = new Camera2D(pixelDimensions, pixelDimensions.scale(0.5));
+		super(camera);
+
+		// NOTE: Setup level texture
+
+		const vertBuffer = Buffer.createRectangleUV(0, 0, pixelDimensions.x, pixelDimensions.y);
+		const textBuffer = Buffer.createRectangleUV();
+		const textureShader = new Shader.TextureShader(vertBuffer, textBuffer, mapTexture);
+		const world = new Entity();
+		world.setShader(textureShader);
+		world.setParent(this);
 
 		this.pixelDimensions = pixelDimensions;
 		this.tileDimensions = tileDimensions;
@@ -97,12 +104,12 @@ export default class Map extends Entity {
 		this.pacman.setDesired(direction);
 	}
 
-	public update(deltaTime: number): boolean {
+	public update(deltaTime: number): this {
 		if (this.introTime) this.introTime--;
 		else if (this.playerDeadState) this.deadTick(deltaTime);
 		else this.gameTick(deltaTime);
 
-		return true;
+		return this;
 	}
 
 	private deadTick(deltaTime: number): void {

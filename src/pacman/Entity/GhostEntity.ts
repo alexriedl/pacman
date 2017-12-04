@@ -22,8 +22,9 @@ abstract class GhostEntity extends PacEntity {
 	public scatterTarget: vec2;
 
 	public constructor(model: PacMap, pacman: PacEntity) {
-		super(model);
+		super();
 		this.pacman = pacman;
+		this.setShader(model);
 	}
 
 	protected get roundingSize(): number { return 0; }
@@ -35,12 +36,12 @@ abstract class GhostEntity extends PacEntity {
 		if (!direction) return;
 		super.setDesired(direction);
 		switch (direction) {
-			case Direction.LEFT: this.model.goLeft(); break;
-			case Direction.RIGHT: this.model.goRight(); break;
-			case Direction.UP: this.model.goUp(); break;
-			case Direction.DOWN: this.model.goDown(); break;
+			case Direction.LEFT: this.shader.goLeft(); break;
+			case Direction.RIGHT: this.shader.goRight(); break;
+			case Direction.UP: this.shader.goUp(); break;
+			case Direction.DOWN: this.shader.goDown(); break;
 		}
-		this.model.nextFrame();
+		this.shader.nextFrame();
 	}
 
 	public setGhostMode(newMode: GhostEntity.GhostMode, reverse: boolean = true) {
@@ -214,9 +215,9 @@ abstract class GhostEntity extends PacEntity {
 		return shortestDirection;
 	}
 
-	public render(gl: WebGLRenderingContext, vpMatrix: mat4, overridePosition?: vec3, overrideScale?: vec3): void {
+	public render(gl: WebGLRenderingContext, viewMatrix: mat4, projectionMatrix: mat4): this {
 		switch (this.ghostMode) { case GhostEntity.GhostMode.HIDDEN: return; }
-		super.render(gl, vpMatrix, overridePosition, overrideScale);
+		return super.render(gl, viewMatrix, projectionMatrix);
 	}
 }
 

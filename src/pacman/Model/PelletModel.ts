@@ -1,51 +1,41 @@
 import { MapTile } from 'pacman/Map';
-import { Color, DynamicBuffer, SimpleRectangle, vec2 } from 'sengine';
+import { Buffer, Color, Shader, vec2 } from 'sengine';
 
-export default class PelletModel extends SimpleRectangle {
-	protected buffer: DynamicBuffer;
+export default class PelletModel extends Shader.SimplerShader {
+	protected buffer: Buffer;
 	private readonly pellets: vec2[];
-	private readonly size: number;
+	private readonly pelletSize: number;
 
-	public constructor(pellets: vec2[], color: Color, size: number = 2) {
-		super(color);
+	public constructor(pellets: vec2[], pelletColor: Color, pelletSize: number = 2) {
+		super(undefined, pelletColor);
 		this.pellets = pellets;
-		this.size = size;
-	}
+		this.pelletSize = pelletSize;
 
-	protected createVertexBuffer(): DynamicBuffer {
-		return new DynamicBuffer();
-	}
-
-	public initialize(gl: WebGLRenderingContext): void {
-		this.updateBuffer();
-	}
-
-	public updateBuffer(): void {
-		this.buffer.setBuffer(getUpdatedBuffer(this.pellets, this.size));
+		this.buffer = new Buffer(
+			getUpdatedBuffer(pellets, pelletSize),
+			{
+				renderMode: WebGLRenderingContext.TRIANGLES,
+				bufferUsages: [{ size: 2 }],
+			},
+		);
 	}
 
 	public removePelletAt(coords: vec2): boolean {
 		const index = this.pellets.findIndex((v) => v.exactEquals(coords));
 		if (index > -1) {
 			this.pellets.splice(index, 1);
-			this.updateBuffer();
+			this.buffer.setBuffer(getUpdatedBuffer(this.pellets, this.pelletSize));
 			return true;
 		}
 
 		return false;
 	}
-
-	protected draw(gl: WebGLRenderingContext): void {
-		if (this.pellets.length > 0) {
-			gl.drawArrays(gl.TRIANGLES, 0, this.pellets.length * 6);
-		}
-	}
 }
 
-function getUpdatedBuffer(pacs: vec2[], size: number): number[] {
+function getUpdatedBuffer(pellets: vec2[], size: number): number[] {
 	const data: number[] = [];
 	const start = MapTile.PIXELS_PER_TILE / 2 - size / 2;
-	for (const coord of pacs) {
+	for (const coord of pellets) {
 		const l = coord.x * MapTile.PIXELS_PER_TILE + start;
 		const r = l + size;
 		const t = coord.y * MapTile.PIXELS_PER_TILE + start;

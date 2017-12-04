@@ -5,7 +5,7 @@ import { Entity } from 'sengine/Entity';
 import { vec2, vec3 } from 'sengine/Math';
 
 export default abstract class PacEntity extends Entity {
-	protected model: PacMap;
+	protected shader: PacMap;
 	public facing: Direction;
 	public tilePosition: vec2;
 	public pixelPosition: vec2;
@@ -55,10 +55,10 @@ export default abstract class PacEntity extends Entity {
 		this.speed = PacEntity.MAX_SPEED;
 		this.traveled = 0;
 
-		if (this.model) this.model.reset();
+		if (this.shader) this.shader.reset();
 	}
 
-	public update(deltaTime: number): boolean {
+	public update(deltaTime: number): this {
 		this.traveled += this.speed;
 		while (this.traveled >= PacEntity.MAX_SPEED) {
 			this.traveled -= PacEntity.MAX_SPEED;
