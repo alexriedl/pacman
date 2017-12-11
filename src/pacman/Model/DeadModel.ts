@@ -1,5 +1,7 @@
 import 'pacman/images/dead.png';
 
+import { Buffer, vec2 } from 'sengine';
+
 import PacMap from './PacMap';
 
 export default class DeadModel extends PacMap {
@@ -12,6 +14,9 @@ export default class DeadModel extends PacMap {
 
 	public constructor() {
 		super('images/dead.png');
-		this.goUp();
+	}
+
+	protected getUVBuffer(): Buffer {
+		return Buffer.createGridUV(new vec2(16, 16), new vec2(16 * 4, 16 * 3), 11);
 	}
 }

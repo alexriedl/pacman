@@ -1,5 +1,7 @@
 import { Buffer, Shader, vec2 } from 'sengine';
 
+const SHARED_VERTEX_BUFFER = Buffer.createSquare(16);
+
 export default abstract class SpriteMap extends Shader.TextureShader {
 	private currentFrames: number[];
 	private currentFrame: number;
@@ -14,10 +16,11 @@ export default abstract class SpriteMap extends Shader.TextureShader {
 		this
 			.setUVBuffer(this.getUVBuffer())
 			.setVertBuffer(this.getVertexBuffer());
+		this.goUp();
 	}
 
 	protected getVertexBuffer(): Buffer {
-		return Buffer.createSquare(1);
+		return SHARED_VERTEX_BUFFER;
 	}
 
 	protected getUVBuffer(): Buffer {
@@ -33,12 +36,13 @@ export default abstract class SpriteMap extends Shader.TextureShader {
 		if (!this.metadata.program) return;
 		if (!this.currentFrames || this.currentFrames.length <= 0) return;
 		this.currentFrame = (this.currentFrame + 1) % this.currentFrames.length;
-		this.uvBuffer.options.bufferUsages[0].offset = this.currentFrames[this.currentFrame] * 8 * 4;
+		const frameIndex = this.currentFrames[this.currentFrame];
+		this.uvBuffer.options.bufferUsages[0].offset = frameIndex * 8 * 4;
 		if (this.currentFrame === 0 && onLoop) onLoop();
 	}
 
 	public reset(): void {
-		this.currentFrames = this.right;
+		this.currentFrames = this.up;
 		this.currentFrame = 0;
 	}
 }
