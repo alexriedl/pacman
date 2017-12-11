@@ -14,7 +14,7 @@ export default class TargetTile extends Entity {
 		const halfTile = MapTile.PIXELS_PER_TILE / 2;
 
 		const buffer = Buffer.createSquare(size);
-		const shader = new Shader.SimplerShader(buffer, color);
+		const shader = new Shader.SimpleShader(buffer, color);
 		this.setShader(shader);
 
 		this.pixelPosition = new vec2(halfTile, halfTile);

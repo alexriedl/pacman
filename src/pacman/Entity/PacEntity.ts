@@ -49,7 +49,6 @@ export default abstract class PacEntity extends Entity {
 		this.tilePosition = this.startTile;
 		this.facing = this.startFacingDirection;
 		this.pixelPosition = new vec2(0, MapTile.PIXELS_PER_TILE / 2);
-		this.scale = new vec3(16, 16, 1);
 		this.setDesired(this.facing);
 
 		this.speed = PacEntity.MAX_SPEED;

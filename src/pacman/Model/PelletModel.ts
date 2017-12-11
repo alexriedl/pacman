@@ -1,7 +1,7 @@
 import { MapTile } from 'pacman/Map';
 import { Buffer, Color, Shader, vec2 } from 'sengine';
 
-export default class PelletModel extends Shader.SimplerShader {
+export default class PelletModel extends Shader.SimpleShader {
 	protected buffer: Buffer;
 	private readonly pellets: vec2[];
 	private readonly pelletSize: number;
