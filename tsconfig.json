@@ -5,7 +5,7 @@
     "target": "es6",
     "sourceMap": false,
     "outDir": "build",
-    "baseUrl": "src",
+    "baseUrl": "./src",
     "paths": {
       "sengine": ["sengine/src/index.ts"],
       "sengine/*": ["sengine/src/*"]
