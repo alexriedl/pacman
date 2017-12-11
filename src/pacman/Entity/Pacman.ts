@@ -63,7 +63,7 @@ export default class Pacman extends PacEntity {
 		}
 		else {
 			if (this.shader) {
-				this.deadTicks = 3;
+				this.deadTicks = 3; // NOTE: Hack for animation frame rate
 				this.shader.nextFrame(this.deadAnimationFinished);
 			}
 		}
