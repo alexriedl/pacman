@@ -5,13 +5,14 @@ export default class EnergizerEntity extends Entity {
 	private flip;
 	private flicker: boolean;
 	private pelletModel: PelletModel;
-	protected model: PelletModel;
+	protected shader: PelletModel;
 
 	public constructor(pellets: vec2[], color: Color, size: number = 2, flicker: boolean = false) {
 		super();
 
 		this.flicker = flicker;
 		this.pelletModel = new PelletModel(pellets, color, size);
+		this.setShader(this.pelletModel);
 
 		this.reset();
 	}
@@ -22,7 +23,7 @@ export default class EnergizerEntity extends Entity {
 		this.flip -= deltaTime;
 		if (this.flip <= 0) {
 			this.flip += 300;
-			this.model = !!this.model ? undefined : this.pelletModel;
+			this.shader = !!this.shader ? undefined : this.pelletModel;
 		}
 		return super.update(deltaTime);
 	}
@@ -32,7 +33,7 @@ export default class EnergizerEntity extends Entity {
 	}
 
 	public reset(): void {
-		this.model = this.pelletModel;
+		this.shader = this.pelletModel;
 		this.flip = 300;
 	}
 }
