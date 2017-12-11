@@ -1,15 +1,12 @@
+import { Blinky, Clyde, GhostEntity, Inky, PacEntity, Pacman, Pinky, TargetTile } from 'pacman/Entity';
+import { Direction } from 'pacman/Utils';
+import { Color, Texture, Types, vec2 } from 'sengine';
+
 import Map from './Map';
 import MapTile from './MapTile';
 import OriginalMap from './OriginalMap';
-import { Blinky, Clyde, GhostEntity, Inky, PacEntity, Pacman, Pinky, TargetTile } from 'pacman/Entity';
-import { Direction } from 'pacman/Utils';
-import { Color, vec2, Texture } from 'sengine';
 
-// TODO: Move these
-export interface IStringMap<T> { [key: string]: T; }
-export interface INumberMap<T> { [key: number]: T; }
-
-const mapInfos: IStringMap<IMapInfo> = { };
+const mapInfos: Types.IStringMap<IMapInfo> = { };
 
 export interface IEntities<T> {
 	pacman?: T;
