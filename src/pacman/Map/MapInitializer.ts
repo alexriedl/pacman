@@ -157,7 +157,7 @@ namespace MapInitializer {
 			}
 		}
 		const data = new Uint8Array(textureData);
-		const texture = new Texture(data, tileDimensions);
+		const texture = new Texture(data, { dimensions: tileDimensions.scale(MapTile.PIXELS_PER_TILE) });
 		return texture;
 	}
 }
