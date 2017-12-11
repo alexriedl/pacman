@@ -30,21 +30,25 @@ export default class Map extends Scene {
 
 	public constructor(mapTexture: Texture, mapInfo: MapTile.BasicMapTile[][], tileDimensions: vec2) {
 		const pixelDimensions = tileDimensions.scale(MapTile.PIXELS_PER_TILE);
-		const camera = new Camera2D(pixelDimensions, pixelDimensions.scale(0.5));
+		const center = pixelDimensions.scale(0.5);
+		const camera = new Camera2D(pixelDimensions, center);
 		super(camera);
-
-		// NOTE: Setup level texture
-
-		const vertBuffer = Buffer.createRectangleUV(0, 0, pixelDimensions.x, pixelDimensions.y);
-		const textBuffer = Buffer.createRectangleUV();
-		const textureShader = new Shader.TextureShader(vertBuffer, textBuffer, mapTexture);
-		const world = new Entity();
-		world.setShader(textureShader);
-		world.setParent(this);
 
 		this.pixelDimensions = pixelDimensions;
 		this.tileDimensions = tileDimensions;
 		this.mapInfo = mapInfo;
+
+		this.setupBackground(mapTexture, pixelDimensions);
+	}
+
+	private setupBackground(mapTexture: Texture, pixelDimensions: vec2) {
+		const center = pixelDimensions.scale(0.5);
+		const vertexBuffer = Buffer.createRectangle(pixelDimensions.x, pixelDimensions.y);
+		const textureBuffer = Buffer.createRectangleUV();
+		const textureShader = new Shader.TextureShader(vertexBuffer, textureBuffer, mapTexture);
+		const world = new Entity(center.toVec3());
+		world.setShader(textureShader);
+		world.setParent(this);
 	}
 
 	public initializePellets(pellets: vec2[], energizers: vec2[], color: Color): void {
@@ -79,13 +83,13 @@ export default class Map extends Scene {
 		this.children.forEach((c) => {
 			if (c instanceof PacEntity) c.reset();
 		});
-		this.energizers.reset();
-		this.pellets.reset();
+		if (this.energizers) this.energizers.reset();
+		if (this.pellets) this.pellets.reset();
 	}
 
 	public removePelletAt(coords: vec2): number {
-		if (this.energizers.removePelletAt(coords)) return 3;
-		if (this.pellets.removePelletAt(coords)) return 1;
+		if (this.energizers && this.energizers.removePelletAt(coords)) return 3;
+		if (this.pellets && this.pellets.removePelletAt(coords)) return 1;
 		// TODO: Check for level complete
 		return 0;
 	}
@@ -123,7 +127,7 @@ export default class Map extends Scene {
 				this.setGhostMode(GhostEntity.GhostMode.HIDDEN, false);
 			}
 
-			this.energizers.update(deltaTime);
+			if (this.energizers) this.energizers.update(deltaTime);
 			return;
 		}
 

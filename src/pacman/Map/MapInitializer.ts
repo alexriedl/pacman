@@ -151,7 +151,7 @@ namespace MapInitializer {
 
 					for (let pixelX = MapTile.PIXELS_PER_TILE - 1; pixelX >= 0; pixelX--) {
 						const pixel = MapTile.isBitSet(pixelX, pixelRow);
-						textureData.push.apply(textureData, pixel ? color : COLORS.EMPTY.rgba);
+						textureData.push(...(pixel ? color : COLORS.EMPTY.rgba));
 					}
 				}
 			}
