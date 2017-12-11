@@ -26,13 +26,24 @@ Reimplementation of the original Pacman game. This is intended to be as close to
 - [ ] Finish Level + new level
 - [ ] Fruit
 - [ ] Points
-- [ ] Flushed out ghost leaving pen logic
-- [ ] Ghosts leave pen to the right if a ghost mode switch happened while the ghost was in the pen
+  - [ ] Fruit display value
+  - [ ] Ghosts display value
+  - [ ] Display total score
+- [ ] High Score
+  - [ ] Store Scores between games
+  - [ ] Allow setting player name
+- [ ] Flushed out ghost leaving pen logic to match actual game
+  - [ ] Ghosts leave pen to the right if a ghost mode switch happened while the ghost was in the pen
 - [ ] Ghost + Player Speeds per level
 - [ ] Blinky's speed based on remain pellets
-- [ ] High Score
 - [ ] Cut Scenes
+  - [ ] Act I
+  - [ ] Act II
+  - [ ] Act III
 - [ ] Main Menu (demo + overview)
+  - [ ] Ghost Intro
+  - [ ] Demo (more than 1? - Random?)
+  - [ ] High Scores List
 
 ## Extra Features (Post 1.0)
 - [ ] Kill Screen (Level 256)
