@@ -3,12 +3,12 @@ import { Buffer, Color, Shader, vec2 } from 'sengine';
 
 const OFFSCREEN_PELLET = [-1, -1, 0, -1, 0, 0, 0, 0, -1, 0, -1, -1];
 export default class PelletModel extends Shader.SimpleShader {
-	private readonly pellets: vec2[];
+	private readonly pellets: Pellet[];
 	private readonly pelletSize: number;
 
 	public constructor(pellets: vec2[], pelletColor: Color, pelletSize: number = 2) {
 		super(undefined, pelletColor);
-		this.pellets = pellets;
+		this.pellets = pellets as Pellet[];
 		this.pelletSize = pelletSize;
 
 		this.setBuffer(new Buffer(
@@ -23,7 +23,10 @@ export default class PelletModel extends Shader.SimpleShader {
 	public removePelletAt(coords: vec2): boolean {
 		const index = this.pellets.findIndex((v) => v.exactEquals(coords));
 		if (index > -1) {
+			const p = this.pellets[index];
+			if (p.consumed) return false;
 			this.buffer.updateBuffer(OFFSCREEN_PELLET, index * 12 * 4);
+			p.consumed = true;
 			return true;
 		}
 
@@ -44,4 +47,9 @@ function getUpdatedBuffer(pellets: vec2[], size: number): number[] {
 		data.push(r, b, l, b, l, t);
 	}
 	return data;
+}
+
+// tslint:disable-next-line:max-classes-per-file
+class Pellet extends vec2 {
+	public consumed: boolean = false;
 }
