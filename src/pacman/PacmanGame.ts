@@ -1,6 +1,6 @@
 import { Map, MapInitializer } from 'pacman/Map';
 import { Direction } from 'pacman/Utils';
-import { Game } from 'sengine/Game';
+import { Game } from 'sengine';
 
 const MILLISECONDS_PER_FRAME = (1 / 60) * 1000;
 

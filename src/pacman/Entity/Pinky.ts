@@ -1,9 +1,11 @@
-import GhostEntity from './GhostEntity';
-import PacEntity from './PacEntity';
 import 'pacman/images/pinky.png';
+
 import { GhostModel } from 'pacman/Model';
 import { Direction } from 'pacman/Utils';
-import { vec2 } from 'sengine/Math';
+import { vec2 } from 'sengine';
+
+import GhostEntity from './GhostEntity';
+import PacEntity from './PacEntity';
 
 export default class Pinky extends GhostEntity {
 	public constructor(pacman: PacEntity) {

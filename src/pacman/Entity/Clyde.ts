@@ -1,8 +1,10 @@
+import 'pacman/images/clyde.png';
+
+import { GhostModel } from 'pacman/Model';
+import { vec2 } from 'sengine';
+
 import GhostEntity from './GhostEntity';
 import PacEntity from './PacEntity';
-import 'pacman/images/clyde.png';
-import { GhostModel } from 'pacman/Model';
-import { vec2 } from 'sengine/Math';
 
 export default class Clyde extends GhostEntity {
 	public constructor(pacman: PacEntity) {

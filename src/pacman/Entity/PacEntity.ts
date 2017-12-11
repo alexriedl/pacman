@@ -1,8 +1,7 @@
 import { Map, MapTile } from 'pacman/Map';
 import { PacMap } from 'pacman/Model';
 import { Direction } from 'pacman/Utils';
-import { Entity } from 'sengine/Entity';
-import { vec2, vec3 } from 'sengine/Math';
+import { Entity, vec2, vec3 } from 'sengine';
 
 export default abstract class PacEntity extends Entity {
 	protected shader: PacMap;

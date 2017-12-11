@@ -1,7 +1,8 @@
-import MapTile from './MapTile';
 import { GhostEntity, PacEntity, Pacman, PelletEntity } from 'pacman/Entity';
 import { Direction } from 'pacman/Utils';
-import { Camera2D, Buffer, Color, Scene, Shader, Texture, vec2, Entity } from 'sengine';
+import { Buffer, Camera2D, Color, Entity, Scene, Shader, Texture, vec2 } from 'sengine';
+
+import MapTile from './MapTile';
 
 interface IGhostModeInfo {
 	currentGhostMode: GhostEntity.GhostMode;

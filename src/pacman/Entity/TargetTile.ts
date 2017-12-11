@@ -1,6 +1,6 @@
 import { GhostEntity } from 'pacman/Entity';
 import { MapTile } from 'pacman/Map';
-import { Color, Entity, vec2, vec3, Shader, Buffer } from 'sengine';
+import { Buffer, Color, Entity, Shader, vec2, vec3 } from 'sengine';
 
 export default class TargetTile extends Entity {
 	private ghost: GhostEntity;
