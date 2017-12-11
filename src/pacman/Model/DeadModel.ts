@@ -6,7 +6,6 @@ import PacMap from './PacMap';
 
 export default class DeadModel extends PacMap {
 	private static readonly FRAMES: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-	protected readonly spriteCount: number = DeadModel.FRAMES.length;
 	protected readonly left: number[] = DeadModel.FRAMES;
 	protected readonly right: number[] = DeadModel.FRAMES;
 	protected readonly up: number[] = DeadModel.FRAMES;
@@ -17,6 +16,6 @@ export default class DeadModel extends PacMap {
 	}
 
 	protected getUVBuffer(): Buffer {
-		return Buffer.createGridUV(new vec2(16, 16), new vec2(16 * 4, 16 * 3), 11);
+		return Buffer.createGridUV(new vec2(16, 16), new vec2(16 * 4, 16 * 3), DeadModel.FRAMES.length);
 	}
 }

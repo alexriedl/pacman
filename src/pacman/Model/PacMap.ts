@@ -16,7 +16,7 @@ export default abstract class SpriteMap extends Shader.TextureShader {
 		this
 			.setUVBuffer(this.getUVBuffer())
 			.setVertBuffer(this.getVertexBuffer());
-		this.goUp();
+		this.reset();
 	}
 
 	protected getVertexBuffer(): Buffer {

@@ -62,14 +62,17 @@ export default class Pacman extends PacEntity {
 			super.tick();
 		}
 		else {
-			this.deadTicks = 3;
-			if (this.shader) this.shader.nextFrame(this.deadAnimationFinished);
+			if (this.shader) {
+				this.deadTicks = 3;
+				this.shader.nextFrame(this.deadAnimationFinished);
+			}
 		}
 	}
 
 	public kill(animationFinished: () => void): void {
 		this.alive = false;
 		this.shader = this.deadModel;
+		this.shader.reset();
 		this.deadTicks = 3;
 		this.deadAnimationFinished = () => {
 			this.shader = undefined;
