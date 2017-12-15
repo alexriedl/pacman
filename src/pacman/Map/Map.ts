@@ -5,8 +5,10 @@ import { Buffer, Camera2D, Color, Entity, Scene, Shader, Texture, vec2 } from 's
 import MapTile from './MapTile';
 
 interface IGhostModeInfo {
-	currentGhostMode: GhostEntity.GhostMode;
-	ghostModeDuration: number;
+	currentMode: GhostEntity.GhostMode;
+	durationInFrames: number;
+	pausedMode: GhostEntity.GhostMode;
+	pausedModeDurationInFrames: number;
 	swaps: number;
 }
 
@@ -23,11 +25,12 @@ export default class Map extends Scene {
 	private static readonly ghostModeDuration: number = 60 * 7; // 60fps = 7 seconds
 
 	private playerDeadState: IPlayerDeadState;
-	private pellets: PelletEntity;
-	private energizers: PelletEntity;
+	private pellets: PelletEntity[];
 	private pacman: Pacman;
 
 	private introTime: number;
+
+	public get currentGhostMode(): GhostEntity.GhostMode { return this.ghostModeInfo.currentMode; }
 
 	public constructor(mapTexture: Texture, mapInfo: MapTile.BasicMapTile[][], tileDimensions: vec2) {
 		const pixelDimensions = tileDimensions.scale(MapTile.PIXELS_PER_TILE);
@@ -53,10 +56,11 @@ export default class Map extends Scene {
 	}
 
 	public initializePellets(pellets: vec2[], energizers: vec2[], color: Color): void {
-		this.pellets = new PelletEntity(pellets, color);
-		this.energizers = new PelletEntity(energizers, color, 6, true);
-		this.pellets.setParent(this);
-		this.energizers.setParent(this);
+		const pelletModel = new PelletEntity(pellets, color);
+		const energizerModel = new PelletEntity(energizers, color, 6, true);
+		pelletModel.setParent(this);
+		energizerModel.setParent(this);
+		this.pellets = [pelletModel, energizerModel];
 	}
 
 	public initializeEntity(entity: PacEntity, startingTile: vec2,
@@ -76,30 +80,63 @@ export default class Map extends Scene {
 		this.introTime = 3 * 60;
 		this.playerDeadState = undefined;
 		this.ghostModeInfo = {
-			currentGhostMode: undefined,
-			ghostModeDuration: Map.ghostModeDuration,
+			currentMode: undefined,
+			durationInFrames: Map.ghostModeDuration,
+			pausedMode: undefined,
+			pausedModeDurationInFrames: 0,
 			swaps: 5,
 		};
 		this.setGhostMode(GhostEntity.GhostMode.SCATTER, false);
 		this.children.forEach((c) => {
 			if (c instanceof PacEntity) c.reset();
 		});
-		if (this.energizers) this.energizers.reset();
-		if (this.pellets) this.pellets.reset();
+		for (const pellet of this.pellets) {
+			if (pellet) pellet.reset();
+		}
 	}
 
-	public removePelletAt(coords: vec2): number {
-		if (this.energizers && this.energizers.removePelletAt(coords)) return 3;
-		if (this.pellets && this.pellets.removePelletAt(coords)) return 1;
-		// TODO: Check for level complete
-		return 0;
+	/**
+	 * Consume a pellet at coords. Returns the size of the pellet consumed
+	 * - If pellet consumed is an energizer, frightened mode will begin
+	 * - If pellet consumed is last pellet on level, level will be complete
+	 * - If no pellet is consumed, 0 is returned
+	 */
+	public eatPelletAt(coords: vec2): number {
+		let pelletSize = 0;
+		let pelletCount = 0;
+		for (const pellet of this.pellets) {
+			if (pellet && pellet.removePelletAt(coords)) {
+				pelletSize = pellet.pelletSize;
+				pelletCount += pellet.pelletCount;
+			}
+		}
+
+		if (pelletCount <= 0) {
+			// TODO: Level Complete
+		}
+
+		// TODO: Don't hard code pellet size for energizer here.
+		if (pelletSize > 4) {
+			// TODO: Disabled until ghosts can handle frightened mode
+			// this.setGhostMode(GhostEntity.GhostMode.FRIGHTENED);
+		}
+
+		return pelletSize;
 	}
 
 	public setGhostMode(newMode: GhostEntity.GhostMode, reverse: boolean = true) {
-		this.ghostModeInfo.currentGhostMode = newMode;
-		this.ghostModeInfo.ghostModeDuration = Map.ghostModeDuration;
+		if (newMode === GhostEntity.GhostMode.FRIGHTENED) {
+			// TODO: May need a check to prevent infinite frightened mode
+			// NOTE: This could happen if an energizer is eaten while still in frightened mode
+			this.ghostModeInfo.pausedMode = this.ghostModeInfo.currentMode;
+			this.ghostModeInfo.pausedModeDurationInFrames = this.ghostModeInfo.durationInFrames;
+		}
+
+		this.ghostModeInfo.currentMode = newMode;
+		this.ghostModeInfo.durationInFrames = Map.ghostModeDuration;
 		this.children.forEach((child) => {
 			if (child instanceof GhostEntity) {
+				// TODO: Need to inform ghost that the new mode is frightened mode and pass timer down
 				child.setGhostMode(newMode, reverse);
 			}
 		});
@@ -128,7 +165,9 @@ export default class Map extends Scene {
 				this.setGhostMode(GhostEntity.GhostMode.HIDDEN, false);
 			}
 
-			if (this.energizers) this.energizers.update(deltaTime);
+			for (const pellet of this.pellets) {
+				if (pellet) pellet.update(deltaTime);
+			}
 			return;
 		}
 
@@ -136,13 +175,18 @@ export default class Map extends Scene {
 	}
 
 	private gameTick(deltaTime: number): void {
-		this.ghostModeInfo.ghostModeDuration--;
+		this.ghostModeInfo.durationInFrames--;
 
-		if (this.ghostModeInfo.ghostModeDuration <= 0 && this.ghostModeInfo.swaps > 0) {
-			this.ghostModeInfo.swaps--;
-
-			this.setGhostMode(this.ghostModeInfo.currentGhostMode === GhostEntity.GhostMode.SCATTER ?
-				GhostEntity.GhostMode.CHASE : GhostEntity.GhostMode.SCATTER);
+		if (this.ghostModeInfo.durationInFrames <= 0) {
+			if (this.ghostModeInfo.currentMode === GhostEntity.GhostMode.FRIGHTENED) {
+				this.ghostModeInfo.currentMode = this.ghostModeInfo.pausedMode;
+				this.ghostModeInfo.durationInFrames = this.ghostModeInfo.pausedModeDurationInFrames;
+			}
+			else if (this.ghostModeInfo.swaps > 0) {
+				this.ghostModeInfo.swaps--;
+				this.setGhostMode(this.ghostModeInfo.currentMode === GhostEntity.GhostMode.SCATTER ?
+					GhostEntity.GhostMode.CHASE : GhostEntity.GhostMode.SCATTER);
+			}
 		}
 
 		super.update(deltaTime);

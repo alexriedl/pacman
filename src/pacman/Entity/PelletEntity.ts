@@ -7,6 +7,9 @@ export default class EnergizerEntity extends Entity {
 	private pelletModel: PelletModel;
 	protected shader: PelletModel;
 
+	public get pelletSize(): number { return this.pelletModel && this.pelletModel.pelletSize; }
+	public get pelletCount(): number { return this.pelletModel && this.pelletModel.pelletCount; }
+
 	public constructor(pellets: vec2[], color: Color, size: number = 2, flicker: boolean = false) {
 		super();
 

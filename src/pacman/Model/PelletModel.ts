@@ -3,13 +3,17 @@ import { Buffer, Color, Shader, vec2 } from 'sengine';
 
 const OFFSCREEN_PELLET = [-1, -1, 0, -1, 0, 0, 0, 0, -1, 0, -1, -1];
 export default class PelletModel extends Shader.SimpleShader {
-	private readonly pellets: Pellet[];
-	private readonly pelletSize: number;
+	private readonly pellets: vec2[];
+	public readonly pelletSize: number;
+	private _pelletCount: number;
+
+	public get pelletCount(): number { return this._pelletCount; }
 
 	public constructor(pellets: vec2[], pelletColor: Color, pelletSize: number = 2) {
 		super(undefined, pelletColor);
-		this.pellets = pellets as Pellet[];
+		this.pellets = pellets;
 		this.pelletSize = pelletSize;
+		this._pelletCount = pellets.length;
 
 		this.setBuffer(new Buffer(
 			getUpdatedBuffer(pellets, pelletSize),
@@ -21,13 +25,14 @@ export default class PelletModel extends Shader.SimpleShader {
 	}
 
 	public removePelletAt(coords: vec2): boolean {
-		const index = this.pellets.findIndex((v) => v.exactEquals(coords));
-		if (index > -1) {
-			const p = this.pellets[index];
-			if (p.consumed) return false;
-			this.buffer.updateBuffer(OFFSCREEN_PELLET, index * 12 * 4);
-			p.consumed = true;
-			return true;
+		for (let index = 0; index < this.pellets.length; index++) {
+			const pellet = this.pellets[index];
+			if (pellet && pellet.exactEquals(coords)) {
+				this.pellets[index] = undefined;
+				this.buffer.updateBuffer(OFFSCREEN_PELLET, index * 12 * 4);
+				this._pelletCount--;
+				return true;
+			}
 		}
 
 		return false;
@@ -47,9 +52,4 @@ function getUpdatedBuffer(pellets: vec2[], size: number): number[] {
 		data.push(r, b, l, b, l, t);
 	}
 	return data;
-}
-
-// tslint:disable-next-line:max-classes-per-file
-class Pellet extends vec2 {
-	public consumed: boolean = false;
 }

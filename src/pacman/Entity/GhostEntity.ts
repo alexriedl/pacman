@@ -22,14 +22,14 @@ abstract class GhostEntity extends PacEntity {
 	protected danceTile: vec2;
 	public scatterTarget: vec2;
 
+	protected get roundingSize(): number { return 0; }
+	protected get followRestrictions(): boolean { return true; }
+
 	public constructor(model: PacMap, pacman: PacEntity) {
 		super();
 		this.pacman = pacman;
 		this.setShader(model);
 	}
-
-	protected get roundingSize(): number { return 0; }
-	protected get followRestrictions(): boolean { return true; }
 
 	public abstract getTargetTile(): vec2;
 

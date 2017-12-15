@@ -13,6 +13,8 @@ export default class Pacman extends PacEntity {
 
 	private deadAnimationFinished: () => void;
 
+	public get isAlive(): boolean { return this.alive; }
+
 	public constructor() {
 		super();
 
@@ -24,8 +26,6 @@ export default class Pacman extends PacEntity {
 
 		this.setShader(this.mainModel);
 	}
-
-	public get isAlive(): boolean { return this.alive; }
 
 	public reset(): void {
 		super.reset();
@@ -47,8 +47,9 @@ export default class Pacman extends PacEntity {
 	}
 
 	protected onTileChange(oldPixelPos: vec2): void {
-		const deadFrames = this.parent.removePelletAt(this.tilePosition);
-		if (deadFrames > 0) {
+		const pelletSize = this.parent.eatPelletAt(this.tilePosition);
+		if (pelletSize > 0) {
+			const deadFrames = pelletSize / 2;
 			this.deadTicks += deadFrames;
 		}
 	}
