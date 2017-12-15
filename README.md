@@ -26,22 +26,39 @@ Reimplementation of the original Pacman game. This is intended to be as close to
   - [ ] Pacman gets a speed boost during frightened mode
   - [ ] Collisions with a frightened ghosts causes that ghost to "die"
 - [ ] Dead Ghosts Return to pen
-- [ ] Player lives + game over
+  - [ ] Sprites
+  - [ ] Speed
+  - [ ] Respawn (back to normal ghost sprite)
+  - [ ] Dance in pen if it should - otherwise leave pen
+- [ ] Player lives
+  - [ ] Game Over
+  - [ ] New Game (having no menu means new game auto starts)
 - [ ] Finish Level + new level
+- [ ] Blinky's speed based on remain pellets
+- [ ] Per Level Config
+  - [ ] Ghost Speed
+  - [ ] Player Speed
+  - [ ] Blinky's remaining pellet bonus speed
+  - [ ] Frightened mode duration
 - [ ] Fruit
+  - [ ] Display fruit after certain number of pellets have been eaten (twice per level)
+  - [ ] Limit by timer
+  - [ ] Allow player to eat fruit
+  - [ ] Different sprite per level
+- [ ] Flush out ghost leaving pen logic to match actual game
+  - [ ] No pellet consumed force timer
+  - [ ] Ghost's individual pellet counters
+  - [ ] Global (after player death) counter
+  - [ ] Ghosts leave pen to the right if a ghost mode switch happened while the ghost was in the pen
 - [ ] Points
   - [ ] Fruit display value
   - [ ] Ghosts display value
   - [ ] Display total score
+  - [ ] Extra life after enough points
+  - [ ] Per level for fruit
 - [ ] High Score
   - [ ] Store Scores between games
   - [ ] Allow setting player name
-- [ ] Flush out ghost leaving pen logic to match actual game
-  - [ ] New game: Timer
-  - [ ] After Death: Pellet Counter (with force timer)
-  - [ ] Ghosts leave pen to the right if a ghost mode switch happened while the ghost was in the pen
-- [ ] Ghost + Player Speeds per level
-- [ ] Blinky's speed based on remain pellets
 - [ ] Cut Scenes
   - [ ] Act I
   - [ ] Act II
@@ -50,11 +67,14 @@ Reimplementation of the original Pacman game. This is intended to be as close to
   - [ ] Ghost Intro
   - [ ] Demo (more than 1? - Random?)
   - [ ] High Scores List
+  - [ ] Start Game
+  - [ ] Game over gets redirected to Main Menu
 
 ## Extra Features (Post 1.0)
 - [ ] Kill Screen (Level 256)
 - [ ] Support for Ms. Pacman Style map (difference in rendering + colors)
-- [ ] Support for Ms. Pacman Ghost Behavior
+- [ ] Support for Ms. Pacman Ghost Behavior (Modes are different)
+- [ ] Support for Ms. Pacman Fruit Behavior
 - [ ] Level Editor + Creator
 - [ ] Upload custom level + download level designed by others
 - [ ] Multi-player (taking turns)
