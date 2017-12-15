@@ -23,6 +23,7 @@ export default class Map extends Scene {
 
 	private ghostModeInfo: IGhostModeInfo;
 	private static readonly ghostModeDuration: number = 60 * 7; // 60fps = 7 seconds
+	private static readonly frightenedModeDurationInFrames: number = 60 * 7; // 60fps = 7 seconds
 
 	private playerDeadState: IPlayerDeadState;
 	private pellets: PelletEntity[];
@@ -117,8 +118,7 @@ export default class Map extends Scene {
 
 		// TODO: Don't hard code pellet size for energizer here.
 		if (pelletSize > 4) {
-			// TODO: Disabled until ghosts can handle frightened mode
-			// this.setGhostMode(GhostEntity.GhostMode.FRIGHTENED);
+			this.setGhostMode(GhostEntity.GhostMode.FRIGHTENED);
 		}
 
 		return pelletSize;
@@ -130,14 +130,15 @@ export default class Map extends Scene {
 			// NOTE: This could happen if an energizer is eaten while still in frightened mode
 			this.ghostModeInfo.pausedMode = this.ghostModeInfo.currentMode;
 			this.ghostModeInfo.pausedModeDurationInFrames = this.ghostModeInfo.durationInFrames;
+			// TODO: Tell pacman about mode - speed is affected
 		}
 
 		this.ghostModeInfo.currentMode = newMode;
 		this.ghostModeInfo.durationInFrames = Map.ghostModeDuration;
 		this.children.forEach((child) => {
 			if (child instanceof GhostEntity) {
-				// TODO: Need to inform ghost that the new mode is frightened mode and pass timer down
-				child.setGhostMode(newMode, reverse);
+				if (newMode === GhostEntity.GhostMode.FRIGHTENED) child.setFrightenedMode(Map.frightenedModeDurationInFrames);
+				else child.setGhostMode(newMode, reverse);
 			}
 		});
 	}

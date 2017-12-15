@@ -18,12 +18,13 @@ abstract class GhostEntity extends PacEntity {
 	protected nextDesiredDirection: Direction;
 
 	public ghostMode: GhostEntity.GhostMode;
+	protected frightenedModeDurationInFrames: number;
 	protected penState: IPenState;
 	protected danceTile: vec2;
 	public scatterTarget: vec2;
 
 	protected get roundingSize(): number { return 0; }
-	protected get followRestrictions(): boolean { return true; }
+	protected get followRestrictions(): boolean { return this.ghostMode !== GhostEntity.GhostMode.FRIGHTENED; }
 
 	public constructor(model: PacMap, pacman: PacEntity) {
 		super();
@@ -31,7 +32,7 @@ abstract class GhostEntity extends PacEntity {
 		this.setShader(model);
 	}
 
-	public abstract getTargetTile(): vec2;
+	public getTargetTile(): vec2 { return new vec2(); }
 
 	public setDesired(direction: Direction) {
 		if (!direction) return;
@@ -43,6 +44,15 @@ abstract class GhostEntity extends PacEntity {
 			case Direction.DOWN: this.shader.goDown(); break;
 		}
 		this.shader.nextFrame();
+	}
+
+	public setFrightenedMode(durationInFrames: number) {
+		// NOTE: Ghosts in the pen are not affected by energizers
+		if (this.penState) return;
+
+		// TODO: Verify entering frightened mode while already in frightened mode causes a ghost to reverse direction
+		this.setGhostMode(GhostEntity.GhostMode.FRIGHTENED);
+		this.frightenedModeDurationInFrames = durationInFrames;
 	}
 
 	public setGhostMode(newMode: GhostEntity.GhostMode, reverse: boolean = true) {
@@ -77,11 +87,26 @@ abstract class GhostEntity extends PacEntity {
 
 	protected onTileChange(oldPixelPos: vec2): void {
 		if (this.penState) return;
-		this.updateDesiredDirection();
+
+		if (this.ghostMode === GhostEntity.GhostMode.FRIGHTENED) this.updateFrightenedDirection();
+		else this.updateDesiredDirection();
 	}
 
 	protected tick(): void {
-		switch (this.ghostMode) { case GhostEntity.GhostMode.HIDDEN: return; }
+		switch (this.ghostMode) {
+			case GhostEntity.GhostMode.HIDDEN: return;
+			case GhostEntity.GhostMode.FRIGHTENED:
+				// NOTE: Post decrement to get at least a frame of frightened mode
+				if (this.frightenedModeDurationInFrames-- <= 0) {
+					this.updateDesiredDirection();
+					this.setGhostMode(this.parent.currentGhostMode, false);
+				}
+				else {
+					this.speed = PacEntity.GHOST_FRIGHTENED_SPEED;
+					super.tick();
+					return;
+				}
+		}
 
 		const tileInfo = this.parent.getTileInfo(this.tilePosition);
 
@@ -172,6 +197,26 @@ abstract class GhostEntity extends PacEntity {
 			this.tilePosition.exactEquals(this.danceTile.addValues(0, 1)) &&
 			this.pixelPosition.y < 4) {
 			this.penState.direction = Direction.UP;
+		}
+	}
+
+	protected updateFrightenedDirection(): void {
+		const invalidOpposite = this.desired && Direction.getOpposite(this.desired);
+
+		// NOTE: The order of this array is the tie-breaker order
+		const options = [
+			Direction.getRandom(),
+			Direction.UP,
+			Direction.LEFT,
+			Direction.DOWN,
+			Direction.RIGHT,
+		].filter((d) => d !== invalidOpposite);
+		for (const direction of options) {
+			const testTile = PacEntity.move(this.tilePosition, direction);
+			if (this.parent.canMoveToTile(testTile, direction)) {
+				this.setDesired(direction);
+				return;
+			}
 		}
 	}
 

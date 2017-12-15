@@ -1,6 +1,7 @@
 import { vec2 } from 'sengine';
 
 export enum Direction { RIGHT = 'RIGHT', LEFT = 'LEFT', UP = 'UP', DOWN = 'DOWN' }
+const VALUES = [ Direction.RIGHT, Direction.LEFT, Direction.UP, Direction.DOWN ];
 
 export namespace Direction {
 	export function getOpposite(d: Direction): Direction {
@@ -30,6 +31,11 @@ export namespace Direction {
 		if (d.x < 0) return Direction.LEFT;
 		if (d.y > 0) return Direction.DOWN;
 		if (d.y < 0) return Direction.UP;
+	}
+
+	export function getRandom(): Direction {
+		// TODO: Use deterministic random to match original game
+		return VALUES[Math.floor(Math.random() * VALUES.length)];
 	}
 }
 

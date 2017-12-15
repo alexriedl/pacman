@@ -14,6 +14,8 @@ export default abstract class PacEntity extends Entity {
 	protected parent?: Map;
 
 	public static readonly MAX_SPEED = 100;
+	public static readonly GHOST_FRIGHTENED_SPEED = 40;
+
 	protected speed: number;
 	private traveled: number;
 

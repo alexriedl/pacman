@@ -28,7 +28,7 @@ export default class Inky extends GhostEntity {
 				const target = crossTile.sub(diff);
 				return target;
 			case GhostEntity.GhostMode.SCATTER: return this.scatterTarget;
-			// TODO: Add logic to get frightened target tile, or change the logic to not use target tiles during that mode
 		}
+		return super.getTargetTile();
 	}
 }
