@@ -21,6 +21,9 @@ Reimplementation of the original Pacman game. This is intended to be as close to
 - [X] Player Death
 - [X] Continue level after death (Reset ghosts into the pen)
 - [ ] Energizers + Frightened Mode
+  - [ ] Eating an energizer causes all ghosts to go into frightened mode
+  - [ ] After Frightened mode time expires, all ghosts return to normal
+  - [ ] Pacman gets a speed boost during frightened mode
 - [ ] Dead Ghosts Return to pen
 - [ ] Player lives + game over
 - [ ] Finish Level + new level
@@ -32,7 +35,9 @@ Reimplementation of the original Pacman game. This is intended to be as close to
 - [ ] High Score
   - [ ] Store Scores between games
   - [ ] Allow setting player name
-- [ ] Flushed out ghost leaving pen logic to match actual game
+- [ ] Flush out ghost leaving pen logic to match actual game
+  - [ ] New game: Timer
+  - [ ] After Death: Pellet Counter (with force timer)
   - [ ] Ghosts leave pen to the right if a ghost mode switch happened while the ghost was in the pen
 - [ ] Ghost + Player Speeds per level
 - [ ] Blinky's speed based on remain pellets
