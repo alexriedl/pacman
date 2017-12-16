@@ -33,6 +33,7 @@ Reimplementation of the original Pacman game. This is intended to be as close to
 - [ ] Player lives
   - [ ] Game Over
   - [ ] New Game (having no menu means new game auto starts)
+  - [ ] Display lives on HUD
 - [ ] Finish Level + new level
 - [ ] Blinky's speed based on remain pellets
 - [ ] Per Level Config
@@ -56,6 +57,13 @@ Reimplementation of the original Pacman game. This is intended to be as close to
   - [ ] Display total score
   - [ ] Extra life after enough points
   - [ ] Per level for fruit
+- [ ] Sound
+  - [ ] Siren
+  - [ ] Eating pellets
+  - [ ] Energizer
+  - [ ] Eating Ghosts
+  - [ ] Level start
+  - [ ] Level end
 - [ ] High Score
   - [ ] Store Scores between games
   - [ ] Allow setting player name
