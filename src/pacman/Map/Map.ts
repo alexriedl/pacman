@@ -65,12 +65,12 @@ export default class Map extends Scene {
 	}
 
 	public initializeEntity(entity: PacEntity, startingTile: vec2,
-		facingDirection: Direction, scatterTarget?: vec2): void {
+		facingDirection: Direction, scatterTarget?: vec2, deadTarget?: vec2): void {
 		entity.setStartingInfo(startingTile, facingDirection);
 		entity.setParent(this);
 
-		if (scatterTarget && entity instanceof GhostEntity) {
-			entity.scatterTarget = scatterTarget;
+		if (entity instanceof GhostEntity) {
+			entity.initialize(scatterTarget, deadTarget);
 		}
 		else if (entity instanceof Pacman) {
 			this.pacman = entity;
@@ -195,9 +195,15 @@ export default class Map extends Scene {
 		if (this.pacman.isAlive) {
 			this.children.forEach((c) => {
 				if (c instanceof GhostEntity && c.tilePosition.exactEquals(this.pacman.tilePosition)) {
-					this.playerDeadState = {
-						deadPauseTimer: 1 * 60,
-					};
+					switch (c.ghostMode) {
+						case GhostEntity.GhostMode.SCATTER:
+						case GhostEntity.GhostMode.CHASE:
+							this.playerDeadState = {
+								deadPauseTimer: 1 * 60,
+							};
+						case GhostEntity.GhostMode.FRIGHTENED:
+							c.setGhostMode(GhostEntity.GhostMode.DEAD, false);
+					}
 				}
 			});
 		}

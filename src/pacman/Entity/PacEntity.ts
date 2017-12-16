@@ -14,9 +14,10 @@ export default abstract class PacEntity extends Entity {
 	protected parent?: Map;
 
 	public static readonly MAX_SPEED = 100;
+	public static readonly PACMAN_FRIGHTENED_SPEED = 150;
 	public static readonly GHOST_FRIGHTENED_SPEED = 40;
+	public static readonly GHOST_DEAD_SPEED = 150;
 
-	protected speed: number;
 	private traveled: number;
 
 	protected startTile: vec2;
@@ -37,6 +38,7 @@ export default abstract class PacEntity extends Entity {
 	protected get followRestrictions(): boolean { return false; }
 	protected onPixelChange(oldPixelPos: vec2): void { return; }
 	protected onTileChange(oldPixelPos: vec2): void { return; }
+	protected abstract get speed(): number;
 
 	public get desired(): Direction { return this._desired; }
 	public setDesired(direction: Direction): void { this._desired = direction; }
@@ -52,7 +54,6 @@ export default abstract class PacEntity extends Entity {
 		this.pixelPosition = new vec2(0, MapTile.PIXELS_PER_TILE / 2);
 		this.setDesired(this.facing);
 
-		this.speed = PacEntity.MAX_SPEED;
 		this.traveled = 0;
 
 		if (this.shader) this.shader.reset();

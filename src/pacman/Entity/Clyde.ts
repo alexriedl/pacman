@@ -18,7 +18,7 @@ export default class Clyde extends GhostEntity {
 				if (distance >= 8) return this.pacman.tilePosition;
 				else return this.scatterTarget;
 			case GhostEntity.GhostMode.SCATTER: return this.scatterTarget;
+			default: return super.getTargetTile();
 		}
-		return super.getTargetTile();
 	}
 }

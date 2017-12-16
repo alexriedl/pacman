@@ -1,3 +1,4 @@
+import GhostEntity from 'pacman/Entity/GhostEntity';
 import { DeadModel, PacmanModel } from 'pacman/Model';
 import { Direction } from 'pacman/Utils';
 import { vec2 } from 'sengine/Math';
@@ -14,6 +15,11 @@ export default class Pacman extends PacEntity {
 	private deadAnimationFinished: () => void;
 
 	public get isAlive(): boolean { return this.alive; }
+
+	protected get speed(): number {
+		if (this.parent.currentGhostMode === GhostEntity.GhostMode.FRIGHTENED) return PacEntity.PACMAN_FRIGHTENED_SPEED;
+		return PacEntity.MAX_SPEED;
+	}
 
 	public constructor() {
 		super();

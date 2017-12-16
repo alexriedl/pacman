@@ -17,7 +17,7 @@ export default class Blinky extends GhostEntity {
 		switch (this.ghostMode) {
 			case GhostEntity.GhostMode.CHASE: return this.pacman.tilePosition;
 			case GhostEntity.GhostMode.SCATTER: return this.scatterTarget;
+			default: return super.getTargetTile();
 		}
-		return super.getTargetTile();
 	}
 }

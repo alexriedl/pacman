@@ -28,7 +28,7 @@ export default class Inky extends GhostEntity {
 				const target = crossTile.sub(diff);
 				return target;
 			case GhostEntity.GhostMode.SCATTER: return this.scatterTarget;
+			default: return super.getTargetTile();
 		}
-		return super.getTargetTile();
 	}
 }

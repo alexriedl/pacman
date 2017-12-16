@@ -21,10 +21,14 @@ abstract class GhostEntity extends PacEntity {
 	protected frightenedModeDurationInFrames: number;
 	protected penState: IPenState;
 	protected danceTile: vec2;
-	public scatterTarget: vec2;
+	protected scatterTarget: vec2;
+	protected deadTarget: vec2;
 
 	protected get roundingSize(): number { return 0; }
-	protected get followRestrictions(): boolean { return this.ghostMode !== GhostEntity.GhostMode.FRIGHTENED; }
+	protected get followRestrictions(): boolean {
+		return this.ghostMode === GhostEntity.GhostMode.SCATTER ||
+			this.ghostMode === GhostEntity.GhostMode.CHASE;
+	}
 
 	public constructor(model: PacMap, pacman: PacEntity) {
 		super();
@@ -32,7 +36,30 @@ abstract class GhostEntity extends PacEntity {
 		this.setShader(model);
 	}
 
-	public getTargetTile(): vec2 { return new vec2(); }
+	public initialize(scatterTarget: vec2, deadTarget: vec2): void {
+		this.scatterTarget = scatterTarget;
+		this.deadTarget = deadTarget;
+	}
+
+	protected get speed(): number {
+		if (this.penState) return 30;
+		switch (this.ghostMode) {
+			case GhostEntity.GhostMode.DEAD: return PacEntity.GHOST_DEAD_SPEED;
+			case GhostEntity.GhostMode.FRIGHTENED: return PacEntity.GHOST_FRIGHTENED_SPEED;
+		}
+		const tileInfo = this.parent.getTileInfo(this.tilePosition);
+		switch (tileInfo) {
+			case MapTile.BasicMapTile.SLOW: return 40;
+		}
+		return PacEntity.MAX_SPEED;
+	}
+
+	public getTargetTile(): vec2 {
+		switch (this.ghostMode) {
+			case GhostEntity.GhostMode.DEAD: return this.deadTarget;
+			default: return new vec2();
+		}
+	}
 
 	public setDesired(direction: Direction) {
 		if (!direction) return;
@@ -56,6 +83,7 @@ abstract class GhostEntity extends PacEntity {
 	}
 
 	public setGhostMode(newMode: GhostEntity.GhostMode, reverse: boolean = true) {
+		if (this.ghostMode === GhostEntity.GhostMode.DEAD) return;
 		this.ghostMode = newMode;
 		if (reverse) {
 			// TODO: If ghost is in a tile against a wall, the ghost could turn around into the wall and get stuck
@@ -67,7 +95,6 @@ abstract class GhostEntity extends PacEntity {
 	}
 
 	protected enterPen(facing: Direction = Direction.DOWN): void {
-		this.speed = 30;
 		this.penState = {
 			entering: false,
 			leaving: this.constructor.name === 'Pinky',
@@ -94,7 +121,7 @@ abstract class GhostEntity extends PacEntity {
 
 	protected tick(): void {
 		switch (this.ghostMode) {
-			case GhostEntity.GhostMode.HIDDEN: return;
+			case GhostEntity.GhostMode.HIDDEN: break;
 			case GhostEntity.GhostMode.FRIGHTENED:
 				// NOTE: Post decrement to get at least a frame of frightened mode
 				if (this.frightenedModeDurationInFrames-- <= 0) {
@@ -102,9 +129,8 @@ abstract class GhostEntity extends PacEntity {
 					this.setGhostMode(this.parent.currentGhostMode, false);
 				}
 				else {
-					this.speed = PacEntity.GHOST_FRIGHTENED_SPEED;
 					super.tick();
-					return;
+					break;
 				}
 		}
 
@@ -116,11 +142,7 @@ abstract class GhostEntity extends PacEntity {
 					this.enterPen();
 				}
 				break;
-			case MapTile.BasicMapTile.SLOW:
-				this.speed = 40;
-				break;
 			default:
-				this.speed = PacEntity.MAX_SPEED;
 				if (this.penState) {
 					this.penState = undefined;
 					this.facing = Direction.LEFT;
@@ -273,6 +295,7 @@ namespace GhostEntity {
 		SCATTER = 'SCATTER',
 		FRIGHTENED = 'FRIGHTENED',
 		HIDDEN = 'HIDDEN',
+		DEAD = 'DEAD',
 	}
 }
 

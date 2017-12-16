@@ -63,6 +63,7 @@ enum MapTile {
 	GTP, // Ghost Target Pinky
 	GTI, // Ghost Target Inky
 	GTC, // Ghost Target Clyde
+	DGT, // Dead Ghost Target
 
 	// Extra
 	FFF, // Full
@@ -85,6 +86,7 @@ namespace MapTile {
 			case MapTile._PS:
 			case MapTile._FS:
 			case MapTile.GSB:
+			case MapTile.DGT:
 			case MapTile._p_:
 			case MapTile._E_:
 			case MapTile.___: return BasicMapTile.OPEN;

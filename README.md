@@ -20,14 +20,14 @@ Reimplementation of the original Pacman game. This is intended to be as close to
 - [X] Ghost Modes (Chase + Scatter)
 - [X] Player Death
 - [X] Continue level after death (Reset ghosts into the pen)
-- [ ] Energizers + Frightened Mode
+- [X] Energizers + Frightened Mode
   - [X] Eating an energizer causes all ghosts to go into frightened mode
   - [X] After Frightened mode time expires, all ghosts return to normal
-  - [ ] Pacman gets a speed boost during frightened mode
-  - [ ] Collisions with a frightened ghosts causes that ghost to "die"
+  - [X] Pacman gets a speed boost during frightened mode
+  - [X] Collisions with a frightened ghosts causes that ghost to "die"
 - [ ] Dead Ghosts Return to pen
   - [ ] Sprites
-  - [ ] Speed
+  - [X] Speed
   - [ ] Respawn (back to normal ghost sprite)
   - [ ] Dance in pen if it should - otherwise leave pen
 - [ ] Player lives

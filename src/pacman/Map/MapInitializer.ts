@@ -22,6 +22,7 @@ export interface IMapInfo {
 	mapTexture: Texture;
 	pellets: vec2[];
 	energizers: vec2[];
+	deadGhostTarget: vec2;
 	startingTiles: IEntities<vec2>;
 	scatterTargets: IEntities<vec2>;
 }
@@ -55,14 +56,16 @@ namespace MapInitializer {
 		entities.clyde = entities.clyde || new Clyde(entities.pacman);
 
 		const info = getMapInfo(mapType);
+		const st = info.startingTiles;
+		const xt = info.scatterTargets;
 
 		const map = new Map(info.mapTexture, info.basicMapTiles, info.tileDimensions);
 		map.initializePellets(info.pellets, info.energizers, COLORS.PELLET.normalize());
-		map.initializeEntity(entities.pacman, info.startingTiles.pacman, Direction.LEFT);
-		map.initializeEntity(entities.blinky, info.startingTiles.blinky, Direction.LEFT, info.scatterTargets.blinky);
-		map.initializeEntity(entities.pinky, info.startingTiles.pinky, Direction.UP, info.scatterTargets.pinky);
-		map.initializeEntity(entities.inky, info.startingTiles.inky, Direction.DOWN, info.scatterTargets.inky);
-		map.initializeEntity(entities.clyde, info.startingTiles.clyde, Direction.DOWN, info.scatterTargets.clyde);
+		map.initializeEntity(entities.pacman, st.pacman, Direction.LEFT);
+		map.initializeEntity(entities.blinky, st.blinky, Direction.LEFT, xt.blinky, info.deadGhostTarget);
+		map.initializeEntity(entities.pinky, st.pinky, Direction.UP, xt.pinky, info.deadGhostTarget);
+		map.initializeEntity(entities.inky, st.inky, Direction.DOWN, xt.inky, info.deadGhostTarget);
+		map.initializeEntity(entities.clyde, st.clyde, Direction.DOWN, xt.clyde, info.deadGhostTarget);
 
 		if (DISPLAY_TARGET_TILE) {
 			new TargetTile(MapInitializer.COLORS.BLINKY.normalize(), entities.blinky as GhostEntity).setParent(map);
@@ -99,6 +102,7 @@ namespace MapInitializer {
 		const basicMapTiles = [];
 		const pellets = [];
 		const energizers = [];
+		let deadGhostTarget = new vec2();
 		for (let tileY = 0; tileY < tileDimensions.y; tileY++) {
 			const tileRow = tiles[tileY];
 			const basicRowInfo = [];
@@ -117,6 +121,7 @@ namespace MapInitializer {
 					case MapTile.GTP: scatterTargets.pinky = new vec2(tileX, tileY); break;
 					case MapTile.GTI: scatterTargets.inky = new vec2(tileX, tileY); break;
 					case MapTile.GTC: scatterTargets.clyde = new vec2(tileX, tileY); break;
+					case MapTile.DGT: deadGhostTarget = new vec2(tileX, tileY); break;
 
 					case MapTile._p_: case MapTile.RUp: pellets.push(new vec2(tileX, tileY)); break;
 					case MapTile._E_: energizers.push(new vec2(tileX, tileY)); break;
@@ -126,6 +131,7 @@ namespace MapInitializer {
 
 		return {
 			tileDimensions,
+			deadGhostTarget,
 			basicMapTiles,
 			mapTexture: buildMapTexture(tiles, tileDimensions),
 			pellets,

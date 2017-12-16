@@ -20,7 +20,7 @@ export default class Pinky extends GhostEntity {
 				if (this.pacman.facing === Direction.UP) target = target.addValues(-4, 0);
 				return target;
 			case GhostEntity.GhostMode.SCATTER: return this.scatterTarget;
+			default: return super.getTargetTile();
 		}
-		return super.getTargetTile();
 	}
 }
