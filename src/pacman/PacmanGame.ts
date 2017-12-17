@@ -4,10 +4,24 @@ import { Game } from 'sengine';
 
 const MILLISECONDS_PER_FRAME = (1 / 60) * 1000;
 
+function buttonPressed(button: GamepadButton | number): boolean {
+	if (typeof (button) === 'object') return button.pressed;
+	return button > 0;
+}
+
+function getControllers() {
+	const n = navigator as any;
+	return n.getGamepads ? n.getGamepads() : (n.webkitGetGamepads ? n.webkitGetGamepads() : []);
+}
+
+const requireManualControllerScan = !('ongamepadconnected' in window);
+const DEAD_ZONE = 0.5;
+
 export default class PacmanGame extends Game {
 	public scene: Map;
 	protected frameTime: number = 0;
 
+	protected readonly controllers: Gamepad[] = [];
 	protected left: boolean;
 	protected right: boolean;
 	protected up: boolean;
@@ -40,7 +54,46 @@ export default class PacmanGame extends Game {
 		}
 	}
 
+	public addController(controller: Gamepad) {
+		this.controllers[controller.index] = controller;
+	}
+
+	public updateController(controller: Gamepad) {
+		this.controllers[controller.index] = controller;
+	}
+
+	public removeController(controller: Gamepad) {
+		delete this.controllers[controller.index];
+	}
+
+	protected scanControllers() {
+		const controllers = getControllers();
+		for (const controller of controllers) {
+			if (controller) {
+				this.updateController(controller);
+			}
+		}
+	}
+
 	protected update(deltaTime: number): void {
+		if (requireManualControllerScan) {
+			this.scanControllers();
+		}
+
+		for (const controller of this.controllers) {
+			if (controller && controller.connected) {
+				this.left = this.left || controller.axes[0] < -DEAD_ZONE;
+				this.right = this.right || controller.axes[0] > +DEAD_ZONE;
+				this.up = this.up || controller.axes[1] < -DEAD_ZONE;
+				this.down = this.down || controller.axes[1] > +DEAD_ZONE;
+
+				this.left = this.left || buttonPressed(controller.buttons[14]);
+				this.right = this.right || buttonPressed(controller.buttons[15]);
+				this.up = this.up || buttonPressed(controller.buttons[12]);
+				this.down = this.down || buttonPressed(controller.buttons[13]);
+			}
+		}
+
 		let d;
 		if (this.left) d = Direction.LEFT;
 		if (this.right) d = Direction.RIGHT;
@@ -49,6 +102,7 @@ export default class PacmanGame extends Game {
 		if (d !== undefined) {
 			this.scene.setPlayerDirection(d);
 		}
+		this.left = this.right = this.up = this.down = false;
 
 		this.frameTime += deltaTime;
 		while (this.frameTime >= MILLISECONDS_PER_FRAME) {
