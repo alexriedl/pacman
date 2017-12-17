@@ -137,7 +137,9 @@ abstract class GhostEntity extends PacEntity {
 			case GhostEntity.GhostMode.DEAD:
 				const tileInfo = this.parent.getTileInfo(this.tilePosition);
 				if (tileInfo === MapTile.BasicMapTile.ENTER_GHOST_PEN) {
-					this.setGhostMode(this.parent.currentGhostMode);
+					const newMode = this.parent.currentGhostMode === GhostEntity.GhostMode.FRIGHTENED ?
+						this.parent.pausedGhostMode : this.parent.currentGhostMode;
+					this.setGhostMode(newMode);
 				}
 
 			default: this.updateDesiredDirection();

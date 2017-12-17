@@ -32,6 +32,7 @@ export default class Map extends Scene {
 	private introTime: number;
 
 	public get currentGhostMode(): GhostEntity.GhostMode { return this.ghostModeInfo.currentMode; }
+	public get pausedGhostMode(): GhostEntity.GhostMode { return this.ghostModeInfo.pausedMode; }
 
 	public constructor(mapTexture: Texture, mapInfo: MapTile.BasicMapTile[][], tileDimensions: vec2) {
 		const pixelDimensions = tileDimensions.scale(MapTile.PIXELS_PER_TILE);
