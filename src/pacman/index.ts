@@ -1,3 +1,5 @@
+import { Performance } from 'sengine';
+
 import PacmanGame from './PacmanGame';
 
 const game = new PacmanGame('game-canvas');
@@ -12,3 +14,5 @@ function handleGamepadEvents(e: GamepadEvent) {
 }
 window.addEventListener('gamepadconnected', handleGamepadEvents);
 window.addEventListener('gamepaddisconnected', handleGamepadEvents);
+
+Performance.enableFrameStatLogs();

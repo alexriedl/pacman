@@ -3,6 +3,7 @@ import { DeadModel, PacmanModel } from 'pacman/Model';
 import { Direction } from 'pacman/Utils';
 import { vec2 } from 'sengine/Math';
 
+import { methodTracker } from '../../sengine/src/Utils/Performance';
 import PacEntity from './PacEntity';
 
 export default class Pacman extends PacEntity {
@@ -60,6 +61,7 @@ export default class Pacman extends PacEntity {
 		}
 	}
 
+	@methodTracker()
 	protected tick(): void {
 		if (this.deadTicks > 0) {
 			this.deadTicks--;

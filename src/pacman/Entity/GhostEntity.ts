@@ -3,6 +3,7 @@ import { EyesModel, GhostModel } from 'pacman/Model';
 import { Direction } from 'pacman/Utils';
 import { mat4, vec2 } from 'sengine';
 
+import { methodTracker } from '../../sengine/src/Utils/Performance';
 import PacEntity from './PacEntity';
 
 interface IPenState {
@@ -146,6 +147,7 @@ abstract class GhostEntity extends PacEntity {
 		}
 	}
 
+	@methodTracker()
 	protected tick(): void {
 		switch (this.ghostMode) {
 			case GhostEntity.GhostMode.HIDDEN: break;

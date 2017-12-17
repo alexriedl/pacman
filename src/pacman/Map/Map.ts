@@ -2,6 +2,8 @@ import { GhostEntity, PacEntity, Pacman, PelletEntity } from 'pacman/Entity';
 import { Direction } from 'pacman/Utils';
 import { Buffer, Camera2D, Color, Entity, Scene, Shader, Texture, vec2 } from 'sengine';
 
+import { methodTracker } from '../../sengine/src/Utils/Performance';
+
 import MapTile from './MapTile';
 
 interface IGhostModeInfo {
@@ -176,6 +178,7 @@ export default class Map extends Scene {
 		super.update(deltaTime);
 	}
 
+	@methodTracker()
 	private gameTick(deltaTime: number): void {
 		this.ghostModeInfo.durationInFrames--;
 

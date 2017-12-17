@@ -6,6 +6,7 @@
     "sourceMap": false,
     "outDir": "build",
     "baseUrl": "./src",
+    "experimentalDecorators": true,
     "paths": {
       "sengine": ["sengine/src/index.ts"],
       "sengine/*": ["sengine/src/*"]
