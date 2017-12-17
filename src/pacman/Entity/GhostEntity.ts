@@ -1,5 +1,5 @@
 import { MapTile } from 'pacman/Map';
-import { PacMap } from 'pacman/Model';
+import { EyesModel, GhostModel } from 'pacman/Model';
 import { Direction } from 'pacman/Utils';
 import { mat4, vec2 } from 'sengine';
 
@@ -24,16 +24,23 @@ abstract class GhostEntity extends PacEntity {
 	protected scatterTarget: vec2;
 	protected deadTarget: vec2;
 
+	protected ghostModel: GhostModel;
+	protected eyesModel: EyesModel;
+
 	protected get roundingSize(): number { return 0; }
 	protected get followRestrictions(): boolean {
 		return this.ghostMode === GhostEntity.GhostMode.SCATTER ||
 			this.ghostMode === GhostEntity.GhostMode.CHASE;
 	}
 
-	public constructor(model: PacMap, pacman: PacEntity) {
+	public constructor(model: GhostModel, pacman: PacEntity) {
 		super();
 		this.pacman = pacman;
-		this.setShader(model);
+
+		this.ghostModel = model;
+		this.eyesModel = new EyesModel();
+
+		this.setShader(this.ghostModel);
 	}
 
 	public initialize(scatterTarget: vec2, deadTarget: vec2): void {
@@ -83,7 +90,7 @@ abstract class GhostEntity extends PacEntity {
 	}
 
 	public setGhostMode(newMode: GhostEntity.GhostMode, reverse: boolean = true) {
-		if (this.ghostMode === GhostEntity.GhostMode.DEAD && newMode !== GhostEntity.GhostMode.HIDDEN) return;
+		const oldMode = this.ghostMode;
 		this.ghostMode = newMode;
 		if (reverse) {
 			// TODO: If ghost is in a tile against a wall, the ghost could turn around into the wall and get stuck
@@ -91,6 +98,15 @@ abstract class GhostEntity extends PacEntity {
 			this.nextDesiredDirection = undefined;
 			this.setDesired(this.facing);
 			this.updateDesiredDirection();
+		}
+
+		switch (newMode) {
+			case GhostEntity.GhostMode.DEAD: this.setShader(this.eyesModel); break;
+			default:
+				if (oldMode === GhostEntity.GhostMode.DEAD) {
+					this.setShader(this.ghostModel);
+				}
+				break;
 		}
 	}
 
