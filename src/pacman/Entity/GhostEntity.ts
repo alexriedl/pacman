@@ -83,7 +83,7 @@ abstract class GhostEntity extends PacEntity {
 	}
 
 	public setGhostMode(newMode: GhostEntity.GhostMode, reverse: boolean = true) {
-		if (this.ghostMode === GhostEntity.GhostMode.DEAD) return;
+		if (this.ghostMode === GhostEntity.GhostMode.DEAD && newMode !== GhostEntity.GhostMode.HIDDEN) return;
 		this.ghostMode = newMode;
 		if (reverse) {
 			// TODO: If ghost is in a tile against a wall, the ghost could turn around into the wall and get stuck
@@ -109,14 +109,23 @@ abstract class GhostEntity extends PacEntity {
 		super.reset();
 		this.danceTile = this.startTile;
 		this.nextDesiredDirection = undefined;
+		this.ghostMode = GhostEntity.GhostMode.SCATTER;
 		this.enterPen(this.facing);
 	}
 
 	protected onTileChange(oldPixelPos: vec2): void {
 		if (this.penState) return;
 
-		if (this.ghostMode === GhostEntity.GhostMode.FRIGHTENED) this.updateFrightenedDirection();
-		else this.updateDesiredDirection();
+		switch (this.ghostMode) {
+			case GhostEntity.GhostMode.FRIGHTENED: this.updateFrightenedDirection(); break;
+			case GhostEntity.GhostMode.DEAD:
+				const tileInfo = this.parent.getTileInfo(this.tilePosition);
+				if (tileInfo === MapTile.BasicMapTile.ENTER_GHOST_PEN) {
+					this.setGhostMode(this.parent.currentGhostMode);
+				}
+
+			default: this.updateDesiredDirection();
+		}
 	}
 
 	protected tick(): void {

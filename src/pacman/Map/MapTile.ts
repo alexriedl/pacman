@@ -79,6 +79,7 @@ namespace MapTile {
 		SLOW = 'SLOW',
 		RESTRICTED_UP = 'RESTRICTED_UP',
 		GHOST_PEN = 'GHOST_PEN',
+		ENTER_GHOST_PEN = 'ENTER_GHOST_PEN',
 	}
 
 	export function toBasicMapTile(tile: MapTile): BasicMapTile {
@@ -86,7 +87,6 @@ namespace MapTile {
 			case MapTile._PS:
 			case MapTile._FS:
 			case MapTile.GSB:
-			case MapTile.DGT:
 			case MapTile._p_:
 			case MapTile._E_:
 			case MapTile.___: return BasicMapTile.OPEN;
@@ -100,6 +100,8 @@ namespace MapTile {
 			case MapTile.GSI:
 			case MapTile.GSC:
 			case MapTile.GGG: case MapTile.GP_: return BasicMapTile.GHOST_PEN;
+
+			case MapTile.DGT: return BasicMapTile.ENTER_GHOST_PEN;
 
 			default: return BasicMapTile.BLOCK;
 		}

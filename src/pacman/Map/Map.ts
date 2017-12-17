@@ -201,6 +201,7 @@ export default class Map extends Scene {
 							this.playerDeadState = {
 								deadPauseTimer: 1 * 60,
 							};
+							break;
 						case GhostEntity.GhostMode.FRIGHTENED:
 							c.setGhostMode(GhostEntity.GhostMode.DEAD, false);
 					}
@@ -213,6 +214,7 @@ export default class Map extends Scene {
 		switch (this.getTileInfo(coords)) {
 			case MapTile.BasicMapTile.GHOST_PEN:
 			case MapTile.BasicMapTile.BLOCK: return false;
+			case MapTile.BasicMapTile.ENTER_GHOST_PEN:
 			case MapTile.BasicMapTile.SLOW:
 			case MapTile.BasicMapTile.OPEN: return true;
 			case MapTile.BasicMapTile.RESTRICTED_UP: return !direction || direction !== Direction.UP;
